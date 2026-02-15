@@ -1,0 +1,19 @@
+name: Sync README to Docker Hub
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - README.md
+
+jobs:
+  sync-readme:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: peter-evans/dockerhub-description@v4
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          repository: jangka512/pgj

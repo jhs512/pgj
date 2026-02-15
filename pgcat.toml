@@ -1,0 +1,7 @@
+[general]
+host = "0.0.0.0"
+port = 6432
+admin_username = "${POSTGRES_USER}"
+admin_password = "${POSTGRES_PASSWORD}"
+log_client_connections = false
+log_client_disconnections = false
