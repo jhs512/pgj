@@ -1,18 +1,3 @@
-# ── Stage 1: pgCat build ────────────────────────────────────────────
-FROM rust:1.81-slim-bookworm AS pgcat-builder
-
-RUN apt-get update \
- && apt-get install -y --no-install-recommends \
-        build-essential pkg-config libssl-dev git \
- && rm -rf /var/lib/apt/lists/*
-
-ARG PGCAT_VERSION=pgcat-0.2.5
-RUN git clone --branch ${PGCAT_VERSION} --depth 1 \
-        https://github.com/postgresml/pgcat.git /tmp/pgcat \
- && cd /tmp/pgcat \
- && cargo build --release
-
-# ── Stage 2: final image ───────────────────────────────────────────
 FROM groonga/pgroonga:latest-debian-18
 
 # ── PostGIS ──────────────────────────────────────────────────────────
@@ -39,13 +24,6 @@ RUN apt-get update \
  && apt-get purge -y --auto-remove build-essential git postgresql-server-dev-18 \
  && rm -rf /tmp/pgvector /var/lib/apt/lists/*
 
-# ── pgCat binary + runtime deps ─────────────────────────────────────
-RUN apt-get update \
- && apt-get install -y --no-install-recommends gettext-base libssl3 \
- && rm -rf /var/lib/apt/lists/*
-
-COPY --from=pgcat-builder /tmp/pgcat/target/release/pgcat /usr/local/bin/pgcat
-COPY pgcat.toml /etc/pgcat/pgcat.toml.template
 COPY entrypoint.sh /entrypoint.sh
 
 # ── healthcheck ──────────────────────────────────────────────────────
@@ -55,5 +33,5 @@ HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
 # ── init extensions ──────────────────────────────────────────────────
 COPY initdb.d/ /docker-entrypoint-initdb.d/
 
-EXPOSE 5432 6432
+EXPOSE 5432
 ENTRYPOINT ["/entrypoint.sh"]
