@@ -22,7 +22,10 @@ for db in "${_dbs[@]}"; do
   db="${db// /}"
   if ! psql -U "${POSTGRES_USER}" -tAc "SELECT 1 FROM pg_database WHERE datname='${db}'" | grep -q 1; then
     psql -U "${POSTGRES_USER}" -c "CREATE DATABASE \"${db}\""
-    echo "pgj-init: created database '${db}'"
+    for f in /docker-entrypoint-initdb.d/*.sql; do
+      [ -f "$f" ] && psql -U "${POSTGRES_USER}" -d "${db}" -f "$f"
+    done
+    echo "pgj-init: created database '${db}' with extensions"
   fi
 done
 
