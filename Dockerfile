@@ -44,7 +44,6 @@ COPY --from=builder /tmp/install /
 
 # Copy custom scripts
 COPY entrypoint.sh /entrypoint.sh
-COPY initdb.d/ /docker-entrypoint-initdb.d/
 
 # Healthcheck
 HEALTHCHECK --interval=30s --timeout=5s --retries=3 \

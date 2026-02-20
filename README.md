@@ -86,7 +86,7 @@ volumes:
 
 ## Extensions
 
-All extensions are auto-enabled on initial database creation:
+PGroonga, PostGIS, and pgvector are pre-installed. Enable them manually as needed:
 
 ```sql
 CREATE EXTENSION IF NOT EXISTS pgroonga;

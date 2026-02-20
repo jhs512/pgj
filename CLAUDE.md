@@ -80,8 +80,6 @@ PostgreSQL 18 기반 Docker 이미지. 전문 검색(PGroonga), 공간 데이터
 pgj/
 ├── Dockerfile                    # 멀티스테이지 빌드
 ├── entrypoint.sh                 # PostgreSQL 기동 + DB 자동 생성
-├── initdb.d/
-│   └── 10-extensions.sql         # 컨테이너 초기화 시 익스텐션 자동 생성
 ├── .github/workflows/
 │   └── sync-readme.yml           # README.md → Docker Hub 설명 자동 동기화
 ├── README.md
@@ -132,6 +130,5 @@ docker push jangka512/pgj:v1
 
 - Dockerfile 수정 후 반드시 `docker buildx build`로 빌드 검증
 - pgvector 버전 업데이트 시 `ARG PGVECTOR_VERSION` 값 변경
-- 새 익스텐션 추가 시: Dockerfile에 설치 단계 추가 + `initdb.d/10-extensions.sql`에 `CREATE EXTENSION` 추가
-- initdb.d 스크립트는 파일명 순서대로 실행됨 (숫자 프리픽스로 순서 제어)
+- 새 익스텐션 추가 시: Dockerfile에 설치 단계만 추가 (사용자가 `CREATE EXTENSION`으로 수동 활성화)
 - 헬스체크: `pg_isready -U postgres` (30초 간격, 5초 타임아웃, 3회 재시도)
