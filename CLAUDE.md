@@ -67,9 +67,9 @@ LLM이 코딩할 때 흔히 저지르는 실수를 줄이기 위한 행동 지�
 
 **이 지침이 잘 작동하고 있다면:** diff에 불필요한 변경이 줄고, 과도한 복잡성으로 인한 재작성이 줄고, 실수 후가 아니라 구현 전에 질문이 나온다.
 
-# PGJ - PostgreSQL + Groonga + Vector + pgCat
+# PGJ - PostgreSQL + Groonga + Vector + PostGIS
 
-PostgreSQL 18 기반 Docker 이미지. 전문 검색(PGroonga), 공간 데이터(PostGIS), 벡터 유사도 검색(pgvector), 커넥션 풀링(pgCat)을 하나의 컨테이너에 통합.
+PostgreSQL 18 기반 Docker 이미지. 전문 검색(PGroonga), 공간 데이터(PostGIS), 벡터 유사도 검색(pgvector)을 하나의 컨테이너에 통합.
 
 **Docker Hub**: `jangka512/pgj`
 **Registry**: https://hub.docker.com/repository/docker/jangka512/pgj
@@ -78,13 +78,12 @@ PostgreSQL 18 기반 Docker 이미지. 전문 검색(PGroonga), 공간 데이터
 
 ```
 pgj/
-├── Dockerfile                    # 멀티스테이지 빌드 (pgCat 빌드 + 최종 이미지)
-├── pgcat.toml                    # pgCat 설정 템플릿 ([general] 섹션만, 풀은 entrypoint에서 동적 생성)
-├── entrypoint.sh                 # PostgreSQL + pgCat 동시 기동 + DB 자동 생성
+├── Dockerfile                    # 멀티스테이지 빌드
+├── entrypoint.sh                 # PostgreSQL 기동 + DB 자동 생성
 ├── initdb.d/
 │   └── 10-extensions.sql         # 컨테이너 초기화 시 익스텐션 자동 생성
 ├── .github/workflows/
-│   └── docker-push.yml           # README.md → Docker Hub 설명 자동 동기화
+│   └── sync-readme.yml           # README.md → Docker Hub 설명 자동 동기화
 ├── README.md
 └── CLAUDE.md
 ```
@@ -96,23 +95,12 @@ pgj/
 | PostgreSQL + PGroonga | `groonga/pgroonga:latest-debian-18` | PostgreSQL 18 |
 | PostGIS | PGDG APT 저장소 | 3.x |
 | pgvector | 소스 빌드 (GitHub) | 0.8.1 |
-| pgCat | 소스 빌드 (GitHub) | 0.2.5 |
 
 ## 포트
 
 | 포트 | 서비스 | 설명 |
 |------|--------|------|
 | 5432 | PostgreSQL | 직접 접속 |
-| 6432 | pgCat | 커넥션 풀러 경유 접속 |
-
-## pgCat 설정
-
-- **풀 모드**: transaction (기본값)
-- **풀 사이즈**: 10 (기본값)
-- **관리 계정**: `POSTGRES_USER`/`POSTGRES_PASSWORD` (환경변수 연동)
-- **풀 생성**: `POSTGRES_DATABASES` 환경변수(쉼표 구분)로 동적 생성. 미지정 시 `postgres` 하나.
-- **DB 자동 생성**: `POSTGRES_DATABASES`에 있는 DB가 PostgreSQL에 없으면 자동 `CREATE DATABASE`
-- 설정 생성 흐름: `pgcat.toml`(general 섹션) → `envsubst` → entrypoint에서 풀 섹션 append → `/etc/pgcat/pgcat.toml`
 
 ## 태그 규칙
 
@@ -133,7 +121,7 @@ pgj/
 docker buildx build -t jangka512/pgj:latest -t jangka512/pgj:v1 .
 
 # 실행
-docker run -d --name pgj -e POSTGRES_PASSWORD=secret -p 5432:5432 -p 6432:6432 jangka512/pgj:latest
+docker run -d --name pgj -e POSTGRES_PASSWORD=secret -p 5432:5432 jangka512/pgj:latest
 
 # Docker Hub에 푸시 (latest + 버전 태그 함께)
 docker push jangka512/pgj:latest
@@ -144,8 +132,6 @@ docker push jangka512/pgj:v1
 
 - Dockerfile 수정 후 반드시 `docker buildx build`로 빌드 검증
 - pgvector 버전 업데이트 시 `ARG PGVECTOR_VERSION` 값 변경
-- pgCat 버전 업데이트 시 `ARG PGCAT_VERSION` 값 변경
 - 새 익스텐션 추가 시: Dockerfile에 설치 단계 추가 + `initdb.d/10-extensions.sql`에 `CREATE EXTENSION` 추가
 - initdb.d 스크립트는 파일명 순서대로 실행됨 (숫자 프리픽스로 순서 제어)
-- pgCat 설정 변경 시 `pgcat.toml` 템플릿 수정 (환경변수는 `${VAR}` 형식)
 - 헬스체크: `pg_isready -U postgres` (30초 간격, 5초 타임아웃, 3회 재시도)

@@ -21,11 +21,10 @@ docker pull jangka512/pgj
 docker run -d --name pgj \
   -e POSTGRES_PASSWORD=secret \
   -p 5432:5432 \
-  -p 5432:5432 \
   jangka512/pgj:latest
 ```
 
-- **5432** — PostgreSQL direct
+- **5432** — PostgreSQL
 
 ## Environment variables
 
@@ -42,7 +41,6 @@ docker run -d --name pgj \
 docker run -d --name pgj \
   -e POSTGRES_PASSWORD=secret \
   -e POSTGRES_DATABASES=postgres,myapp \
-  -p 5432:5432 \
   -p 5432:5432 \
   jangka512/pgj:latest
 ```
