@@ -51,3 +51,4 @@ HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
 
 EXPOSE 5432
 ENTRYPOINT ["/entrypoint.sh"]
+CMD ["postgres"]
