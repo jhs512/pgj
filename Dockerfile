@@ -51,4 +51,4 @@ HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
 
 EXPOSE 5432
 ENTRYPOINT ["/entrypoint.sh"]
-CMD ["postgres"]
+CMD ["postgres", "-c", "shared_preload_libraries=pg_stat_statements,auto_explain", "-c", "auto_explain.log_min_duration=1000"]
