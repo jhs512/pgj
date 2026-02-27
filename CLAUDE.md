@@ -81,6 +81,7 @@ pgj/
 ├── Dockerfile                    # 멀티스테이지 빌드
 ├── entrypoint.sh                 # PostgreSQL 기동 + DB 자동 생성
 ├── .github/workflows/
+│   ├── build-and-push-image.yml  # Docker 이미지 빌드 + Docker Hub 푸시
 │   └── sync-readme.yml           # README.md → Docker Hub 설명 자동 동기화
 ├── README.md
 └── CLAUDE.md
@@ -104,26 +105,27 @@ pgj/
 
 | 태그 | 용도 |
 |------|------|
-| `latest` | 최신 빌드, 항상 함께 푸시 |
-| `v1`, `v2`, ... | 버전 릴리스, 숫자 순 증가 |
+| `latest` | main 브랜치 푸시 시 자동 생성 |
+| `1.2.3`, `1.2`, `1` | SemVer 태그(`v1.2.3`) 푸시 시 자동 생성 |
 
 ## 빌드 및 배포
 
-- Docker 빌드는 로컬에서 수행 (GitHub Actions에서는 빌드하지 않음)
+- main 푸시 → CI가 `latest` 태그로 Docker Hub에 빌드/푸시
+- SemVer 태그(`v1.2.3`) 푸시 → CI가 `1.2.3`, `1.2`, `1` 태그로 빌드/푸시
 - main에 README.md 변경을 push하면 GitHub Actions가 Docker Hub README 자동 동기화
-- 워크플로우: `.github/workflows/docker-push.yml`
+- 워크플로우: `.github/workflows/build-and-push-image.yml`, `.github/workflows/sync-readme.yml`
 - 필요한 시크릿: `DOCKERHUB_USERNAME`, `DOCKERHUB_TOKEN` (GitHub repo Settings > Secrets)
 
 ```bash
-# 로컬 빌드 (latest + 버전 태그)
-docker buildx build -t jangka512/pgj:latest -t jangka512/pgj:v1 .
+# 로컬 빌드 (테스트용)
+docker buildx build -t jangka512/pgj:latest .
 
 # 실행
 docker run -d --name pgj -e POSTGRES_PASSWORD=secret -p 5432:5432 jangka512/pgj:latest
 
-# Docker Hub에 푸시 (latest + 버전 태그 함께)
-docker push jangka512/pgj:latest
-docker push jangka512/pgj:v1
+# 릴리스: SemVer 태그 생성 → CI가 자동 빌드/푸시
+git tag v1.0.0
+git push origin v1.0.0
 ```
 
 ## 개발 가이드라인
