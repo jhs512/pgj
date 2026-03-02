@@ -69,7 +69,7 @@ LLM이 코딩할 때 흔히 저지르는 실수를 줄이기 위한 행동 지�
 
 # PGJ - PostgreSQL + Groonga + Vector + PostGIS
 
-PostgreSQL 18 기반 Docker 이미지. 전문 검색(PGroonga), 공간 데이터(PostGIS), 벡터 유사도 검색(pgvector)을 하나의 컨테이너에 통합.
+PostgreSQL 18 기반 Docker 이미지. 전문 검색(PGroonga), 공간 데이터(PostGIS), 벡터 유사도 검색(pgvector), 벡터 인덱싱 가속(pgvectorscale)을 하나의 컨테이너에 통합.
 
 **Docker Hub**: `jangka512/pgj`
 **Registry**: https://hub.docker.com/repository/docker/jangka512/pgj
@@ -94,6 +94,7 @@ pgj/
 | PostgreSQL + PGroonga | `groonga/pgroonga:latest-debian-18` | PostgreSQL 18 |
 | PostGIS | PGDG APT 저장소 | 3.x |
 | pgvector | 소스 빌드 (GitHub) | 0.8.1 |
+| pgvectorscale | 소스 빌드 (GitHub, pgrx) | 0.9.0 |
 
 ## 포트
 

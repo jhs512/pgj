@@ -1,6 +1,6 @@
 # PGJ
 
-PostgreSQL 18 + PGroonga + PostGIS + pgvector in a single container.
+PostgreSQL 18 + PGroonga + PostGIS + pgvector + pgvectorscale in a single container.
 
 ```
 docker pull jangka512/pgj
@@ -14,6 +14,7 @@ docker pull jangka512/pgj
 | PGroonga   | latest  | Full-text search (Groonga-based) |
 | PostGIS    | 3.x     | Spatial data                     |
 | pgvector   | 0.8.1   | Vector similarity search         |
+| pgvectorscale | 0.9.0 | DiskANN index, streaming quantization |
 
 ## Quick start
 
@@ -86,12 +87,13 @@ volumes:
 
 ## Extensions
 
-PGroonga, PostGIS, and pgvector are pre-installed. Enable them manually as needed:
+PGroonga, PostGIS, pgvector, and pgvectorscale are pre-installed. Enable them manually as needed:
 
 ```sql
 CREATE EXTENSION IF NOT EXISTS pgroonga;
 CREATE EXTENSION IF NOT EXISTS postgis;
 CREATE EXTENSION IF NOT EXISTS vector;
+CREATE EXTENSION IF NOT EXISTS vectorscale CASCADE;
 ```
 
 ## Tags
@@ -107,3 +109,4 @@ CREATE EXTENSION IF NOT EXISTS vector;
 - [PGroonga](https://pgroonga.github.io/)
 - [PostGIS](https://postgis.net/)
 - [pgvector](https://github.com/pgvector/pgvector)
+- [pgvectorscale](https://github.com/timescale/pgvectorscale)
