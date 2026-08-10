@@ -13,7 +13,7 @@ docker pull jangka512/pgj
 | PostgreSQL | 18      | Base database                    |
 | PGroonga   | latest  | Full-text search (Groonga-based) |
 | PostGIS    | 3.x     | Spatial data                     |
-| pgvector   | 0.8.1   | Vector similarity search         |
+| pgvector   | 0.8.6   | Vector similarity search         |
 | pgvectorscale | 0.9.0 | DiskANN index, streaming quantization |
 
 ## Quick start

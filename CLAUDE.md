@@ -93,7 +93,7 @@ pgj/
 |--------|------|------|
 | PostgreSQL + PGroonga | `groonga/pgroonga:latest-debian-18` | PostgreSQL 18 |
 | PostGIS | PGDG APT 저장소 | 3.x |
-| pgvector | 소스 빌드 (GitHub) | 0.8.1 |
+| pgvector | 소스 빌드 (GitHub) | 0.8.6 |
 | pgvectorscale | 소스 빌드 (GitHub, pgrx) | 0.9.0 |
 
 ## 포트

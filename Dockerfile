@@ -3,7 +3,7 @@
 # ── Builder Stage: pgvector ─────────────────────────────────────────
 FROM groonga/pgroonga:latest-debian-18 AS pgvector-builder
 
-ARG PGVECTOR_VERSION=0.8.1
+ARG PGVECTOR_VERSION=0.8.6
 
 WORKDIR /tmp/pgvector
 
